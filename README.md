@@ -1,40 +1,34 @@
 
-# Power menu ![Power menu](readme/icon.svg)
+# Power menu ![Power menu](readme/icon.svg) 
 
 ![alt text](readme/preview.gif)
 
-Power menu built in rust with dioxus!
+Power menu built in Rust with [Dioxus](https://dioxuslabs.com/)!
+
+[![GitHub release](https://img.shields.io/github/v/release/SAANN3/color-replacer?label=Download)](https://github.com/SAANN3/power-menu/releases/latest)
 ## How to build
 ```bash
 git clone https://github.com/SAANN3/power-menu.git
-cd Power-menu
-cargo build 
+cd power-menu
+cargo build --release
 ```
-Builded binary will be located in ```target/debug/power-menu```
+The Built binary will be located in ```target/release/power-menu```
 
-After that you can move binary anywhere
+After that you can move the binary anywhere
 
 ## Usage
 
 Add it to autostart and then, when you need to launch it, click on the power icon in the system tray
 
 ## Styling
-Open ```assets/main.css``` and edit the css class
+On first start (or if config dir is empty), the program creates all files in config directory. Then you simply edit them.
+Open ```$HOME/.config/power-menu/assets/main.css``` and edit the css class
 ```css
 :root {
-    --global-color: aliceblue; // icons, text, borders,  basically all 
-    --global-bg-color: #white; // background color
+    --global-color: rgb(255, 255, 255); // icons, text, borders,  basically all 
+    --global-bg-color: #28292a; // background color
 }
 ```
 
-
-#### !! If styling doesn't applying, make sure that you have deleted  'assets' folder in place, where binary is located. !!
-
-For example, to run app, you need to write
-```bash
-cargo run
-```
-But if you want to reset current stylings, you need to remove assets folder
-```bash
-rm -r target/debug/assets && cargo run
-```
+## Migration
+If you encountered some issues after updating to newer version, please see [CHANGELOG.md](CHANGELOG.md)
