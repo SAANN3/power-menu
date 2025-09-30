@@ -4,6 +4,7 @@ use std::sync::Arc;
 use dioxus::prelude::*;
 use dioxus::prelude::{component, rsx, Element};
 
+use crate::assets::LocalAssets;
 use crate::{Action, HoverProps};
 
 #[component]
@@ -39,7 +40,7 @@ pub fn WindowItem(action: ReadOnlySignal<Action>, position: i64, onClick: EventH
             opacity: opacity,
             z_index: z,
             img { 
-                src: action().get_image(), class: "image-with-text"
+                src: LocalAssets::get_path(action().get_image()), class: "image-with-text"
             },
             div { font_size: "28px",
                 "{action}"
