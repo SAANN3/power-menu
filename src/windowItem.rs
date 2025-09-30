@@ -1,29 +1,23 @@
+use std::ops::Deref;
+use std::sync::Arc;
+
 use dioxus::prelude::*;
 use dioxus::prelude::{component, rsx, Element};
 
-use crate::HoverProps;
+use crate::assets::LocalAssets;
+use crate::{Action, HoverProps};
 
 #[component]
-pub fn WindowItem(text: String, image: String, position: i64, selected: Signal<Option<i64>>,  onhover: EventHandler<HoverProps>) -> Element {
-    let text = use_signal(|| text);
+pub fn WindowItem(action: ReadOnlySignal<Action>, position: i64, onClick: EventHandler<Action>, onhover: EventHandler<HoverProps>, selected: ReadOnlySignal<Option<Action>>) -> Element {
     let mut transform = use_signal(|| "".to_string());
     let mut opacity = use_signal(|| 1.0);
     let mut z = use_signal(|| 0);
-    let mut call_transform = move || {
-        if selected.read().is_none() {
-            *selected.write() = Some(position);
-        }
-        // used to test
-        // else {
-        //    *selected.write() = None;
-        //}
-        
-    };
+
 
     use_effect(move || {
-        if selected.read().is_some() {
+        if let Some(selected) = selected() {
             *transform.write() = format!("translateX(calc({position}*(100% + 40px)))");
-            if position != selected.read().unwrap() {
+            if action != selected {
                 *opacity.write() = 0.0;
                 *z.write() = -9999;
             }
@@ -36,18 +30,20 @@ pub fn WindowItem(text: String, image: String, position: i64, selected: Signal<O
 
     rsx! {
         div {
-            onmouseenter: move |_| onhover.call(HoverProps{inside: true, text: text()}),
-            onmouseleave: move |_| onhover.call(HoverProps{inside: false,text: text()}),
-            onclick: move |_| call_transform(),
+            onmouseenter: move |_| onhover.call(HoverProps{inside: true,  action: action()}),
+            onmouseleave: move |_| onhover.call(HoverProps{inside: false, action: action()}),
+            onclick: move |_| {
+                onClick.call(action());
+            },
             class: "vbox window-item",
             transform: transform,
             opacity: opacity,
             z_index: z,
             img { 
-                src: image, class: "image-with-text"
+                src: LocalAssets::get_path(action().get_image()), class: "image-with-text"
             },
-            div {font_size: "28px",
-                "{text}"
+            div { font_size: "28px",
+                "{action}"
             }
         }
     }
